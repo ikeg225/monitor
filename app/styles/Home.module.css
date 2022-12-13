@@ -1,0 +1,23 @@
+.addForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: fit-content;
+    margin: 2em;
+}
+
+.addForm h3, .addForm p {
+    margin: 0;
+}
+
+.addForm h3 {
+    margin: 1em 0;
+}
+
+.ErrorMessage {
+    color: red;
+}
+
+.SuccessMessage {
+    color: green;
+}

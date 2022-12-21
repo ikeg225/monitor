@@ -18,12 +18,16 @@ class Scrape:
     def add_post(self, max_id):
         for i in range(self.last_id, max_id + 1):
             post = self.get_post(i)
-            if 'title' in post:
-                self.queue.put((post['title'].lower(), self.item + str(post['id'])))
-            elif 'text' in post:
-                self.queue.put((post['text'].lower(), self.item + str(post['id'])))
+            if post:
+                if 'title' in post:
+                    self.queue.put((post['title'].lower(), self.item + str(post['id'])))
+                elif 'text' in post:
+                    self.queue.put((post['text'].lower(), self.item + str(post['id'])))
         self.last_id = max_id + 1
     
+    def get_last_id(self):
+        return self.last_id
+        
     def run(self):
         max_post_static = self.max_post()
         if self.last_id < max_post_static:

@@ -19,9 +19,9 @@ class Database:
             while stream.alive:
                 change = stream.try_next()
                 if change is not None:
-                    # need to handle other database operations
+                    # delete: potentially remove keyword 
                     if change['operationType'] == 'insert':
-                        changes.append((change['operationType'], change['keyword']))
+                        changes.append((change['operationType'], change['fullDocument']['keyword']))
                 else:
                     stream.close()
         self.last_checked = Timestamp(int(datetime.datetime.now(datetime.timezone.utc).timestamp()), 0)

@@ -18,7 +18,7 @@ export default function Home() {
     const hackernews = e.target[2].checked
     const lobster = e.target[3].checked
     const keywords = e.target[4].value.toLowerCase()
-    const email = e.target[5].value
+    const email = e.target[5].value.toLowerCase().trim()
 
     if (twitter || reddit || hackernews || lobster) {
       const data = {
@@ -94,7 +94,7 @@ export default function Home() {
           <h3>Enter an email to notify</h3>
           <input type="text" placeholder="email..." required/>
         </div>
-        <button type="submit">Add Keyword and Email</button>
+        <button type="submit">Add Keyword(s) and Email</button>
         {apiError && <p className={styles.ErrorMessage}>There was an error: {apiErrorMessage}</p>}
         {success && <p className={styles.SuccessMessage}>Successfully added!</p>}
       </form>

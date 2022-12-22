@@ -17,7 +17,18 @@ class Monitor:
     def find_keywords(self, text):
         keywords_found = set()
         for keyword in self.automation.iter(text):
-            keywords_found.add(keyword[1])
+            if keyword[1].startswith("#"):
+                if keyword[0] + 1 >= len(text) or not (text[keyword[0] + 1].isalnum() or text[keyword[0] + 1] == "_"):
+                    keywords_found.add(keyword[1])
+            else:
+                index, found_hashtag = keyword[0] - len(keyword[1]), False
+                while index >= 0 and (text[index].isalnum() or text[index] == "_" or text[index] == "#"):
+                    if text[index] == "#":
+                        found_hashtag = True
+                        break
+                    index -= 1
+                if not found_hashtag:
+                    keywords_found.add(keyword[1])
         return keywords_found
 
     def update_automation(self, updates):

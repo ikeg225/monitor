@@ -21,3 +21,9 @@
 .SuccessMessage {
     color: green;
 }
+
+.toggle {
+    display: flex;
+    flex-direction: row;
+    margin: 2em;
+}

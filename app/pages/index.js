@@ -7,8 +7,9 @@ export default function Home() {
   const [apiErrorMessage, setApiErrorMessage] = useState('')
   const [noPlatform, setNoPlatform] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [toggle, setToggle] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault()
     setNoPlatform(false)
     setSuccess(false)
@@ -59,13 +60,25 @@ export default function Home() {
     }
   }
 
+  const handleDelete = async (e) => {
+
+  }
+
+  const handleSwitch = async (e) => {
+    setToggle(e.target.checked)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
         <title>Keyword Monitor</title>
         <meta name="description" content="Add users to Keyword Monitor Database" />
       </Head>
-      <form onSubmit={handleSubmit} className={styles.addForm}>
+      <div className={styles.toggle}>
+        <input type="checkbox" onChange={handleSwitch} />
+        {toggle ? <h3>Delete Keyword/Email</h3> : <h3>Add Keyword/Email</h3>}
+      </div>
+      {!toggle && <form onSubmit={handleAdd} className={styles.addForm}>
         <div>
           <h3>Choose a platform (or multiple)</h3>
           <div>
@@ -97,7 +110,40 @@ export default function Home() {
         <button type="submit">Add Keyword(s) and Email</button>
         {apiError && <p className={styles.ErrorMessage}>There was an error: {apiErrorMessage}</p>}
         {success && <p className={styles.SuccessMessage}>Successfully added!</p>}
-      </form>
+      </form>}
+      {toggle && <form onSubmit={handleDelete} className={styles.addForm}>
+        <div>
+          <h3>Choose a platform (or multiple)</h3>
+          <div>
+            <input type="checkbox" id="twitter" name="twitter" />
+            <label htmlFor="twitter">Twitter</label>
+          </div>
+          <div>
+            <input type="checkbox" id="reddit" name="reddit" />
+            <label htmlFor="reddit">Reddit</label>
+          </div>
+          <div>
+            <input type="checkbox" id="hackernews" name="hackernews" />
+            <label htmlFor="hackernews">Hacker News</label>
+          </div>
+          <div>
+            <input type="checkbox" id="lobster" name="lobster" />
+            <label htmlFor="lobster">Lobste.rs</label>
+          </div>
+          {noPlatform && <p className={styles.ErrorMessage}>Please select at least one platform</p>}
+        </div>
+        <div>
+          <h3>Enter an email to delete from</h3>
+          <input type="text" placeholder="email..." required/>
+        </div>
+        <div>
+          <h3>Enter the keywords to delete (separate with comma / not case sensitive)</h3>
+          <input type="text" placeholder="keywords..." required/>
+        </div>
+        <button type="submit">Delete Keyword(s) and Email</button>
+        {apiError && <p className={styles.ErrorMessage}>There was an error: {apiErrorMessage}</p>}
+        {success && <p className={styles.SuccessMessage}>Successfully added!</p>}
+      </form>}
     </div>
   )
 }

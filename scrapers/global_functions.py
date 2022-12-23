@@ -4,12 +4,13 @@ from monitor import Monitor
 from database import Database
 
 class Global:
-    def __init__(self, platform):
+    def __init__(self, platform, sleep):
         self.platform = platform
         self.database = Database(self.platform)
         exec(f'from {self.platform}.scrape import Scrape', globals())
         self.scrape = Scrape(self.database.get_current_id())
         self.monitor = Monitor(self.database)
+        self.sleep = sleep
 
     def main_run(self):
         while True:
@@ -23,7 +24,7 @@ class Global:
             self.database.update_current_id(self.scrape.get_last_id())
             end_break = datetime.now()
             sleep_time = (end_break - start_break).seconds
-            if sleep_time < 10:
-                time.sleep(10 - sleep_time)
+            if sleep_time < self.sleep:
+                time.sleep(self.sleep - sleep_time)
 
             self.scrape.run()

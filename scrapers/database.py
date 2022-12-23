@@ -2,7 +2,6 @@ import os
 import datetime
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from bson.timestamp import Timestamp
 
 load_dotenv()
 
@@ -12,7 +11,6 @@ class Database:
         self.clientDB = MongoClient(CONNECTION_STRING)
         self.collection_name = collection_name
         self.client = self.clientDB['keywordmonitor'][collection_name]
-        self.last_checked = Timestamp(int(datetime.datetime.now(datetime.timezone.utc).timestamp()), 0)
     
     def database_changes(self):
         changes = []

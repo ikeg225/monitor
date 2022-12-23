@@ -32,11 +32,16 @@ class Monitor:
         return keywords_found
 
     def update_automation(self, updates):
-        # delete keywords
         for update in updates:
             if update[0] == 'insert':
                 self.automation.add_word(update[1], update[1])
-                self.automation.make_automaton()
+            elif update[0] == 'delete':
+                self.automation.remove_word(update[1])
+        self.automation.make_automaton()
+    
+    def print_keywords(self):
+        for keyword in self.automation:
+            print(keyword)
     
     def send_email(self, recipient, subject, body_text, body_html):
         charset = "UTF-8"

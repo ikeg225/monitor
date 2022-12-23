@@ -22,9 +22,8 @@ class Global:
                 self.monitor.notify_clients(keywords, post[0], post[1])
             self.database.update_current_id(self.scrape.get_last_id())
             end_break = datetime.now()
-
             sleep_time = (end_break - start_break).seconds
-            if sleep_time < 180:
-                time.sleep(180 - sleep_time)
+            if sleep_time < 10:
+                time.sleep(10 - sleep_time)
 
             self.scrape.run()

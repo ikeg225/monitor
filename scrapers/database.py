@@ -16,16 +16,9 @@ class Database:
     
     def database_changes(self):
         changes = []
-        with self.client.watch([], start_at_operation_time=self.last_checked) as stream:
-            while stream.alive:
-                change = stream.try_next()
-                if change is not None:
-                    # delete: potentially remove keyword 
-                    if change['operationType'] == 'insert':
-                        changes.append((change['operationType'], change['fullDocument']['keyword']))
-                else:
-                    stream.close()
-        self.last_checked = Timestamp(int(datetime.datetime.now(datetime.timezone.utc).timestamp()), 0)
+        for document in self.clientDB['keywordmonitor']['changes' + self.collection_name.capitalize()].find({}):
+            changes.append((document['operationType'], document['keyword']))
+            self.clientDB['keywordmonitor']['changes' + self.collection_name.capitalize()].delete_one({'_id': document['_id']})
         return changes
     
     def get_client(self):

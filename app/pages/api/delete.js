@@ -33,44 +33,38 @@ export default async function handler(req, res) {
                             const remove_count = await all.updateOne({ email: email }, { $pull: { [key]: keyword } })
                             if (remove_count['modifiedCount'] == 1) {
                                 const updated_fields = await collection.findOneAndUpdate({ keyword: keyword }, { $pull: { email: email } }, { returnDocument: 'after' })
-                                if (updated_fields['value']['email'].length === 0) {
-                                    await collection.deleteOne({ keyword: keyword })
-                                }
+                                setTimeout(() => {
+                                    if (updated_fields['value']['email'].length === 0) {
+                                        collection.deleteOne({ keyword: keyword })
+                                    }
+                                }, 1000)
                             }
                         }
                     })
                 }
             })
 
-            // async function deleteKeys() {
-            //     await removeKeywords().then(async () => {
-            //         const updated_result = await all.findOne({ email: email })
-            //         let count_keys = 0;
-            //         let count_removed = 0;
-            //         Object.keys(updated_result).forEach(function(key) {
-            //             if (key !== "_id" && key !== "email") {
-            //                 count_keys += 1
-            //                 if (updated_result[key].length === 0) {
-            //                     count_removed += 1
-            //                     all.updateOne({ email: email }, { $unset: { [key]: "" } })
-            //                 }
-            //             }
-            //         });
-            //         console.log(count_keys, count_removed)
-            //         return count_keys - count_removed    
-            //     })
-            // }
+            setTimeout(async () => {
+                const updated_result = await all.findOne({ email: email })
+                let count_keys = 0;
+                let count_removed = 0;
+                Object.keys(updated_result).forEach(function(key) {
+                    if (key !== "_id" && key !== "email") {
+                        count_keys += 1
+                        if (updated_result[key].length === 0) {
+                            count_removed += 1
+                            all.updateOne({ email: email }, { $unset: { [key]: "" } })
+                        }
+                    }
+                });
 
-            // async function deleteEmail() {
-            //     const count_difference = await deleteKeys();
-
-            //     console.log(count_difference)
-            //     if (count_difference === 0) {
-            //         all.deleteOne({ email: email })
-            //     }
-            // }
+                setTimeout(async () => {
+                    if ((count_keys - count_removed) === 0) {
+                        all.deleteOne({ email })
+                    }
+                }, 1000)
+            }, 2500)
             
-            // deleteEmail()
             res.status(200).json({ success: true })
         } else {
             res.status(400).json({ error: 'Email address invalid' })

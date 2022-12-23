@@ -7,23 +7,23 @@ export default async function handler(req, res) {
     const platforms = [twitter, reddit, hackernews, lobster];
 
     try {
-        platforms.forEach((platform, index) => {
+        platforms.forEach(async (platform, index) => {
             if (platform) {
-                const collection = db.collection(index === 0 ? 'twitter' : index === 1 ? 'reddit' : index === 2 ? 'hackernews' : 'lobster')
-                const all = db.collection('all')
+                const collection = await db.collection(index === 0 ? 'twitter' : index === 1 ? 'reddit' : index === 2 ? 'hackernews' : 'lobster')
+                const all = await db.collection('all')
 
-                keywords.split(',').forEach(keyword => {
+                keywords.split(',').forEach(async keyword => {
                     keyword = keyword.trim()
                     if (keyword !== '') {
-                        collection.updateOne({ keyword: keyword }, { $addToSet: { email: email } }, { upsert: true })
+                        await collection.updateOne({ keyword: keyword }, { $addToSet: { email: email } }, { upsert: true })
                         if (index === 0) {
-                            all.updateOne({ email: email }, { $addToSet: { twitter: keyword } }, { upsert: true })
+                            await all.updateOne({ email: email }, { $addToSet: { twitter: keyword } }, { upsert: true })
                         } else if (index === 1) {
-                            all.updateOne({ email: email }, { $addToSet: { reddit: keyword } }, { upsert: true })
+                            await all.updateOne({ email: email }, { $addToSet: { reddit: keyword } }, { upsert: true })
                         } else if (index === 2) {
-                            all.updateOne({ email: email }, { $addToSet: { hackernews: keyword } }, { upsert: true })
+                            await all.updateOne({ email: email }, { $addToSet: { hackernews: keyword } }, { upsert: true })
                         } else {
-                            all.updateOne({ email: email }, { $addToSet: { lobster: keyword } }, { upsert: true })
+                            await all.updateOne({ email: email }, { $addToSet: { lobster: keyword } }, { upsert: true })
                         }
                     }
                 })

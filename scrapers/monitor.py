@@ -15,7 +15,7 @@ class Monitor:
         self.automation.make_automaton()
     
     def find_keywords(self, text):
-        keywords_found = set()
+        keywords_found, text = set(), text.lower()
         for keyword in self.automation.iter(text):
             if keyword[1].startswith("#"):
                 if keyword[0] + 1 >= len(text) or not (text[keyword[0] + 1].isalnum() or text[keyword[0] + 1] == "_"):

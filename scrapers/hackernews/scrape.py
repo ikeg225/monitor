@@ -20,9 +20,9 @@ class Scrape:
             post = self.get_post(i)
             if post:
                 if 'title' in post:
-                    self.queue.put((post['title'].lower(), self.item + str(post['id'])))
+                    self.queue.put((post['title'], self.item + str(post['id'])))
                 elif 'text' in post:
-                    self.queue.put((post['text'].lower(), self.item + str(post['id'])))
+                    self.queue.put((post['text'], self.item + str(post['id'])))
         self.last_id = max_id + 1
     
     def get_last_id(self):

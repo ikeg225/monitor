@@ -1,18 +1,20 @@
-import requests
+import sys, queue, requests, json
+sys.path.insert(0, r'../')
+from web_workers import perform_web_requests
 
 class Scrape:
-    def __init__(self, last_id, url, content_type, user_agent):
+    def __init__(self, last_id, content_type):
         self.last_id = last_id
-        self.url = url
+        self.url = "https://api.reddit.com/api/info.json?id="
         self.content_type = content_type
         self.user_agent = {
-            "User-Agent": user_agent
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9"
         }
-        self.proxy = {
-            "http": "http://",
-            "https": "http://"
-        }
+        self.queue = queue.Queue()
         self.max_id = self.get_max_id()
+    
+    def get_last_id(self):
+        return self.last_id
     
     def to_base_36(self, s):
         BS = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -24,11 +26,10 @@ class Scrape:
     
     def get_max_id(self):
         if self.content_type == "t3":
-            response = requests.get("https://api.reddit.com/r/all/new.json?limit=2", headers=self.user_agent, proxies=self.proxy)
-            print(response.headers)
+            response = requests.get("https://api.reddit.com/r/all/new.json?limit=2", headers=self.user_agent)
             return response.json()["data"]["after"][3:]
         elif self.content_type == "t1":
-            response = requests.get("https://www.reddit.com/r/all/comments/.json", headers=self.user_agent, proxies=self.proxy)
+            response = requests.get("https://www.reddit.com/r/all/comments/.json", headers=self.user_agent)
             return response.json()["data"]["after"][3:]
 
     def links_to_request(self):
@@ -41,13 +42,31 @@ class Scrape:
         return link
     
     def make_request_list(self):
-        link_list = []
-        for _ in range(15):
-            link_list.append(self.links_to_request())
-        return link_list
-
-
-
-scrape = Scrape(1, "https://api.reddit.com/api/info.json?id=", "t3", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9")
-
-#print(scrape.get_max_id())
+        link_queue, did_break = queue.Queue(), False
+        for _ in range(300):
+            if self.last_id == self.max_id:
+                did_break = True
+                break
+            link_queue.put(self.links_to_request())
+        return link_queue, did_break
+    
+    def scrape_links(self, instance={}):
+        link_queue, did_break = self.make_request_list()
+        results = perform_web_requests(link_queue, 10, instance)
+        for result in results:
+            for child in json.loads(result)["data"]["children"]:
+                if self.content_type == "t3":
+                    self.queue.put((child["data"]["title"] + child["data"]["selftext"], child["data"]["url"]))
+                elif self.content_type == "t1":
+                    self.queue.put((child["data"]["body"], 'https://www.reddit.com' + child["data"]["permalink"]))
+        return did_break
+    
+    def run(self, instances=[]):
+        if not instances:
+            self.scrape_links()
+        else:
+            for instance in instances:
+                links = self.scrape_links(instance)
+                if links:
+                    break
+        self.max_id = self.get_max_id()

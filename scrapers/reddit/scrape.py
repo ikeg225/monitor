@@ -62,6 +62,7 @@ class Scrape:
         return did_break
     
     def run(self, instances=[]):
+        self.max_id = self.get_max_id()
         if not instances:
             self.scrape_links()
         else:
@@ -69,4 +70,3 @@ class Scrape:
                 links = self.scrape_links(instance)
                 if links:
                     break
-        self.max_id = self.get_max_id()

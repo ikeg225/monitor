@@ -43,7 +43,7 @@ class Scrape:
     
     def make_request_list(self):
         link_queue, did_break = queue.Queue(), False
-        for _ in range(300):
+        for _ in range(300 if self.content_type == "t1" else 295):
             if self.last_id == self.max_id:
                 did_break = True
                 break

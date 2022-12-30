@@ -17,11 +17,10 @@ def round_up(tm):
     return newtime
 
 while True:
-    updates = database.database_changes()
-    monitor.update_automation(updates)
-
     scrape.run()
 
+    updates = database.database_changes()
+    monitor.update_automation(updates)
     while scrape.queue.qsize() > 0:
         post = scrape.queue.get()
         keywords = monitor.find_keywords(post[0])

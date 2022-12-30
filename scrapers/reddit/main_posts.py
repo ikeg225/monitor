@@ -17,15 +17,16 @@ def round_up(tm):
     return newtime
 
 while True:
-    scrape.run()
-
     updates = database.database_changes()
     monitor.update_automation(updates)
+
+    scrape.run()
+
     while scrape.queue.qsize() > 0:
         post = scrape.queue.get()
         keywords = monitor.find_keywords(post[0])
         monitor.notify_clients(keywords, post[0], post[1])
     database.update_current_id(scrape.get_last_id(), "redditPosts")
-    
+
     current_time = datetime.datetime.now()
     time.sleep((round_up(current_time) - current_time).seconds + 5)

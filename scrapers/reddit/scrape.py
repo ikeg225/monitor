@@ -56,7 +56,7 @@ class Scrape:
         for result in results:
             for child in json.loads(result)["data"]["children"]:
                 if self.content_type == "t3":
-                    self.queue.put((child["data"]["title"] + child["data"]["selftext"], child["data"]["url"]))
+                    self.queue.put((child["data"]["title"] + child["data"]["selftext"], 'https://www.reddit.com' + child["data"]["permalink"]))
                 elif self.content_type == "t1":
                     self.queue.put((child["data"]["body"], 'https://www.reddit.com' + child["data"]["permalink"]))
         return did_break

@@ -10,7 +10,8 @@ load_dotenv()
 database = Database("reddit")
 monitor = Monitor(database)
 
-scrape = Scrape(database.get_current_id("redditComments"), "t1")
+scrape_posts = Scrape(database.get_current_id("redditPosts"), "t3")
+scrape_comments = Scrape(database.get_current_id("redditComments"), "t1")
 
 def round_up(tm):
     upmins = math.ceil(float(tm.minute)/10)*10
@@ -20,7 +21,21 @@ def round_up(tm):
     return newtime
 
 while True:
-    scrape.run(instances=[{
+    scrape_posts.run()
+
+    print("here")
+
+    updates = database.database_changes()
+    monitor.update_automation(updates)
+    while scrape_posts.queue.qsize() > 0:
+        post = scrape_posts.queue.get()
+        keywords = monitor.find_keywords(post[0])
+        monitor.notify_clients(keywords, post[0], post[1])
+    database.update_current_id(scrape_posts.get_last_id(), "redditPosts")
+
+    print("here2")
+
+    scrape_comments.run(instances=[{
         "UserAgent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36",
         "Proxy": {
             "http": f"http://{os.getenv('PROXY1')}",
@@ -40,13 +55,17 @@ while True:
         }
     }])
 
+    print("here3")
+
     updates = database.database_changes()
     monitor.update_automation(updates)
-    while scrape.queue.qsize() > 0:
-        post = scrape.queue.get()
+    while scrape_comments.queue.qsize() > 0:
+        post = scrape_comments.queue.get()
         keywords = monitor.find_keywords(post[0])
         monitor.notify_clients(keywords, post[0], post[1])
-    database.update_current_id(scrape.get_last_id(), "redditComments")
+    database.update_current_id(scrape_comments.get_last_id(), "redditComments")
     
+    print("here4")
+
     current_time = datetime.datetime.now()
     time.sleep((round_up(current_time) - current_time).seconds + 5)

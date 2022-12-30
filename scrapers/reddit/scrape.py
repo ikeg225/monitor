@@ -26,7 +26,7 @@ class Scrape:
     
     def get_max_id(self):
         if self.content_type == "t3":
-            response = requests.get("https://api.reddit.com/r/all/new.json?limit=2", headers=self.user_agent)
+            response = requests.get("https://api.reddit.com/r/all/new.json", headers=self.user_agent)
             return response.json()["data"]["after"][3:]
         elif self.content_type == "t1":
             response = requests.get("https://www.reddit.com/r/all/comments/.json", headers=self.user_agent)

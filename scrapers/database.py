@@ -24,8 +24,8 @@ class Database:
     def get_emails(self, keyword):
         return self.client.find_one({'keyword': keyword})['email']
     
-    def get_current_id(self):
-        return self.clientDB['keywordmonitor']['last_id'].find_one({'platform': self.collection_name})['lastID']
+    def get_current_id(self, platform):
+        return self.clientDB['keywordmonitor']['last_id'].find_one({'platform': platform})['lastID']
     
-    def update_current_id(self, id):
-        self.clientDB['keywordmonitor']['last_id'].update_one({'platform': self.collection_name}, {'$set': {'lastID': id}})
+    def update_current_id(self, id, platform):
+        self.clientDB['keywordmonitor']['last_id'].update_one({'platform': platform}, {'$set': {'lastID': id}})

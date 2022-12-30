@@ -8,7 +8,7 @@ class Global:
         self.platform = platform
         self.database = Database(self.platform)
         exec(f'from {self.platform}.scrape import Scrape', globals())
-        self.scrape = Scrape(self.database.get_current_id())
+        self.scrape = Scrape(self.database.get_current_id(platform))
         self.monitor = Monitor(self.database)
         self.sleep = sleep
 
@@ -21,7 +21,7 @@ class Global:
                 post = self.scrape.queue.get()
                 keywords = self.monitor.find_keywords(post[0])
                 self.monitor.notify_clients(keywords, post[0], post[1])
-            self.database.update_current_id(self.scrape.get_last_id())
+            self.database.update_current_id(self.scrape.get_last_id(), self.platform)
             end_break = datetime.now()
             sleep_time = (end_break - start_break).seconds
             if sleep_time < self.sleep:

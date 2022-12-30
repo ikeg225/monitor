@@ -89,8 +89,8 @@ class Scrape:
         )
         if response.status_code != 200:
             raise Exception(
-                "Cannot get stream (HTTP {}): {}".format(
-                    response.status_code, response.text
+                "Cannot get stream (HTTP {}): {} {}".format(
+                    response.status_code, response.text, response.headers
                 )
             )
         for response_line in response.iter_lines():

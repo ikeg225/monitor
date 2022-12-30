@@ -1,7 +1,18 @@
+import requests
+
 class Scrape:
-    def __init__(self, last_id, url):
+    def __init__(self, last_id, url, content_type, user_agent):
         self.last_id = last_id
         self.url = url
+        self.content_type = content_type
+        self.user_agent = {
+            "User-Agent": user_agent
+        }
+        self.proxy = {
+            "http": "http://",
+            "https": "http://"
+        }
+        self.max_id = self.get_max_id()
     
     def to_base_36(self, s):
         BS = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -10,16 +21,33 @@ class Scrape:
             res += BS[s%36]
             s //= 36
         return res[::-1] or "0"
+    
+    def get_max_id(self):
+        if self.content_type == "t3":
+            response = requests.get("https://api.reddit.com/r/all/new.json?limit=2", headers=self.user_agent, proxies=self.proxy)
+            print(response.headers)
+            return response.json()["data"]["after"][3:]
+        elif self.content_type == "t1":
+            response = requests.get("https://www.reddit.com/r/all/comments/.json", headers=self.user_agent, proxies=self.proxy)
+            return response.json()["data"]["after"][3:]
 
-    def links_to_request(self, current_id):
-        current_id_10 = int(current_id, base=36)
-        link = self.url + "t3_" + self.to_base_36(current_id_10)
-        for i in range(current_id_10 + 1, current_id_10 + 101):
-            link += ",t3_" + self.to_base_36(i)
-        self.last_id = self.to_base_36(current_id_10 + 101)
+    def links_to_request(self):
+        last_id_10 = int(self.last_id, base=36)
+        link = self.url + f"{self.content_type}_{self.last_id}"
+        url_end = min(last_id_10 + 100, int(self.max_id, base=36))
+        for i in range(last_id_10 + 1, url_end):
+            link += f",{self.content_type}_{self.to_base_36(i)}"
+        self.last_id = self.to_base_36(url_end)
         return link
     
+    def make_request_list(self):
+        link_list = []
+        for _ in range(15):
+            link_list.append(self.links_to_request())
+        return link_list
 
-scrape = Scrape(1, "https://api.reddit.com/api/info.json?id=")
 
-print(scrape.links_to_request("90ythp"))
+
+scrape = Scrape(1, "https://api.reddit.com/api/info.json?id=", "t3", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9")
+
+#print(scrape.get_max_id())

@@ -31,7 +31,7 @@ def perform_web_requests(q, no_workers, instance):
                     self.queue.task_done()
                 except Exception as e:
                     print(e)
-                    self.queue.insert(0, content)
+                    self.queue.queue.insert(0, content)
                     time.sleep(30)
 
     # Workers keep working till they receive an empty string

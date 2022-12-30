@@ -23,8 +23,6 @@ def round_up(tm):
 while True:
     scrape_posts.run()
 
-    print("here")
-
     updates = database.database_changes()
     monitor.update_automation(updates)
     while scrape_posts.queue.qsize() > 0:
@@ -32,8 +30,6 @@ while True:
         keywords = monitor.find_keywords(post[0])
         monitor.notify_clients(keywords, post[0], post[1])
     database.update_current_id(scrape_posts.get_last_id(), "redditPosts")
-
-    print("here2")
 
     scrape_comments.run(instances=[{
         "UserAgent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36",
@@ -55,8 +51,6 @@ while True:
         }
     }])
 
-    print("here3")
-
     updates = database.database_changes()
     monitor.update_automation(updates)
     while scrape_comments.queue.qsize() > 0:
@@ -65,7 +59,5 @@ while True:
         monitor.notify_clients(keywords, post[0], post[1])
     database.update_current_id(scrape_comments.get_last_id(), "redditComments")
     
-    print("here4")
-
     current_time = datetime.datetime.now()
     time.sleep((round_up(current_time) - current_time).seconds + 5)

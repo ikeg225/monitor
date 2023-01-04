@@ -97,4 +97,4 @@ class Monitor:
                 </html>
                 """
 
-                self.send_email(email, f"Keyword Found: {keyword}", body_text, body_html)
+                self.send_email(email, f"Twitter Monitor Found: {keyword}", body_text, body_html)

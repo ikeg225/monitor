@@ -1,0 +1,22 @@
+.margins {
+    margin: 2em;
+}
+
+.form {
+    padding-top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: fit-content;
+}
+
+.input {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.graph {
+    width: 100%;
+    height: 500px;
+}

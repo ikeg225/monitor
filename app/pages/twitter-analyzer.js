@@ -12,7 +12,7 @@ export default function TwitterAnalyzer() {
     e.preventDefault()
     let start_time = e.target[0].value
     const end_time = e.target[1].value
-    const keywords = e.target[2].value.toLowerCase()
+    const keyword = e.target[2].value.toLowerCase()
     setKeyword(e.target[2].value)
 
     const data = {
@@ -20,95 +20,29 @@ export default function TwitterAnalyzer() {
         "params": {
           "start_time": start_time,
           "end_time": end_time,
-          "granularity": "DAY",
-          "keywords": [
-            keywords
-          ]
+          "keyword": keyword
         }
       }
     }
 
     const JSONdata = JSON.stringify(data);
-    const endpoint = '/api/twitter';
+    const endpoint = '/api/twitterAnalyzer';
 
-    const returned_data = {
-      "request": {
-        "params": {
-          "start_time": "2018-02-01T00:00:00Z",
-          "end_time": "2018-02-07T00:00:00Z",
-          "granularity": "DAY",
-          "keywords": [
-            "developers"
-          ]
-        }
+    const returned_data = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
-      "data": {
-        "related_keywords": [
-          "dev",
-          "developer",
-          "coders",
-          "mysql",
-          "devs",
-          "#technology",
-          "#developers",
-          "security",
-          "programmers",
-          "#tech",
-          "javascript",
-          "#iot",
-          "#bigdata",
-          "cloud",
-          "devops",
-          "php",
-          "developer",
-          "programmer",
-          "engineer",
-          "big data",
-          "agile",
-          "app",
-          "programming",
-          "ios",
-          "maker",
-          "startups",
-          "developer's",
-          "java",
-          "#devops",
-          "startup"
-        ],
-        "tweet_volume": [
-          15707,
-          14707,
-          18707,
-          19707,
-          10707,
-          20707,
-        ]
-      }
-    }
-
-    setRelatedKeywords(returned_data.data.related_keywords)
-    start_time = new Date(start_time)
-    const graph_data = []
-    let volume_first_half = 0
-    let volume_second_half = 0
-    for (let i = 0; i < returned_data.data.tweet_volume.length; i++) {
-      graph_data.push({
-        "date": start_time.getDate() + "/" + (start_time.getMonth() + 1) + "/" + start_time.getFullYear(),
-        "volume": returned_data.data.tweet_volume[i]
-      })
-      start_time.setDate(start_time.getDate() + 1)
-      if (i < returned_data.data.tweet_volume.length / 2) {
-        volume_first_half += returned_data.data.tweet_volume[i]
-      } else {
-        volume_second_half += returned_data.data.tweet_volume[i]
-      }
-    }
-    
-    setGraphData(graph_data)
-    setAnalytics([volume_first_half + volume_second_half, 
-      (volume_first_half + volume_second_half) / returned_data.data.tweet_volume.length,
-    (((volume_second_half - volume_first_half) / volume_first_half) * 100).toFixed(2)
-    ])
+      body: JSONdata
+    }).then(async res => {
+      const data = await res.json()
+      setRelatedKeywords(data.related_keywords)
+      setGraphData(data.graph_data)
+      setAnalytics([data.volume_first_half + data.volume_second_half, 
+        (data.volume_first_half + data.volume_second_half) / data.number_of_tweets,
+      (((data.volume_second_half - data.volume_first_half) / data.volume_first_half) * 100).toFixed(2)
+      ])
+    })
   }
   
   return (

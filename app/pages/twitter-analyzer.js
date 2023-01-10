@@ -28,7 +28,7 @@ export default function TwitterAnalyzer() {
     const JSONdata = JSON.stringify(data);
     const endpoint = '/api/twitterAnalyzer';
 
-    const returned_data = await fetch(endpoint, {
+    await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

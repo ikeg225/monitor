@@ -68,9 +68,14 @@ class Scrape:
                 else:
                     rule['value'] += f' OR {keyword}'
             else:
-                rules.append(rule)
+                if rule['value'] != '':
+                    rules.append(rule)
                 rule = {'value': keyword}
-        rules.append(rule)
+        if rule['value'] != '':
+            rules.append(rule)
+        if len(rules) > 23:
+            print("Twitter Rule greater than 23 - running out of rules")
+            print(rules)
         return rules
     
     def get_twitter_keywords(self):

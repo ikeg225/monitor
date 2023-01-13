@@ -83,6 +83,9 @@ class Monitor:
                 f"Keyword: {keyword}\n"
                 f"Post: {text}\n"
                 f"Link: {url}"
+                "____________________________________________________________"
+                "PLEASE DO NOT REPLY TO THIS EMAIL"
+                "Twitter Monitoring by ScreamOutSocial.com"
                 )
 
                 body_html = f"""
@@ -93,10 +96,11 @@ class Monitor:
                 <p><b>Keyword:</b> {keyword}</p>
                 <p><b>Post:</b> {text}</p>
                 <p><b>Link: </b><a href='{url}'>{url}</a></p>
-                <p></p>
+                <br><br>
                 <p>____________________________________________________________</p>
+                <br><br>
                 <p>PLEASE DO NOT REPLY TO THIS EMAIL</p>
-                <p></p>
+                <br><br>
                 <p>Twitter Monitoring by ScreamOutSocial.com</p>
                 </body>
                 </html>

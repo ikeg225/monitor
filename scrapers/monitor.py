@@ -96,11 +96,11 @@ class Monitor:
                 <p><b>Keyword:</b> {keyword}</p>
                 <p><b>Post:</b> {text}</p>
                 <p><b>Link: </b><a href='{url}'>{url}</a></p>
-                <br><br>
+                <br>
                 <p>____________________________________________________________</p>
-                <br><br>
+                <br>
                 <p>PLEASE DO NOT REPLY TO THIS EMAIL</p>
-                <br><br>
+                <br>
                 <p>Twitter Monitoring by ScreamOutSocial.com</p>
                 </body>
                 </html>

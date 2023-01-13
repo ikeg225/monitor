@@ -83,7 +83,8 @@ class Monitor:
                 f"Keyword: {keyword}\n"
                 f"Post: {text}\n"
                 f"Link: {url}"
-                "____________________________________________________________"
+                ""
+                "______________________"
                 "PLEASE DO NOT REPLY TO THIS EMAIL"
                 "Twitter Monitoring by ScreamOutSocial.com"
                 )
@@ -96,7 +97,8 @@ class Monitor:
                 <p><b>Keyword:</b> {keyword}</p>
                 <p><b>Post:</b> {text}</p>
                 <p><b>Link: </b><a href='{url}'>{url}</a></p>
-                <p>____________________________________________________________</p>
+                <br>
+                <p>______________________</p>
                 <p>PLEASE DO NOT REPLY TO THIS EMAIL</p>
                 <p>Twitter Monitoring by ScreamOutSocial.com</p>
                 </body>

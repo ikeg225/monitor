@@ -1,0 +1,13 @@
+.signup {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 2em;
+    width: fit-content;
+}
+
+.fields {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}

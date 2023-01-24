@@ -1,29 +1,63 @@
-.addForm {
+.container {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-    width: fit-content;
-    margin: 2em;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
 }
 
-.addForm h3, .addForm p {
-    margin: 0;
+.login {
+    display: flex;
+    flex-direction: column;
+    background-color: #E26F2C;
+    padding: 40px 100px;
+    margin: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    color: white;
+    font-family: 'Source Sans 3 Bold';
 }
 
-.addForm h3 {
-    margin: 1em 0;
+.login h1 {
+    margin: 0 0 15px 0;
 }
 
-.ErrorMessage {
-    color: red;
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 10px;
 }
 
-.SuccessMessage {
-    color: green;
-}
-
-.toggle {
+.control {
     display: flex;
     flex-direction: row;
-    margin: 2em;
+    gap: 10px;
+}
+
+.control input {
+    border: none;
+    border-radius: 10px;
+    font-family: 'Source Sans 3';
+    padding: 0 10px;
+}
+
+.actions button {
+    border: none;
+    border-radius: 10px;
+    font-family: 'Source Sans 3 Bold';
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    width: 100%
+}
+
+.error {
+    margin: 0;
+    text-align: center;
+}
+
+.logo {
+    max-width: 250px;
 }

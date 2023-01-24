@@ -1,26 +1,27 @@
 import styles from '../styles/TwitterAnalyzer.module.css'
 import { useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { signOut, getSession } from "next-auth/react"
 
 export default function TwitterAnalyzer() {
-  const [graphData, setGraphData] = useState({})
   const [relatedKeywords, setRelatedKeywords] = useState([])
   const [analytics, setAnalytics] = useState([])
-  const [keyword, setKeyword] = useState('')
+  const [tweets, setTweets] = useState([])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let start_time = e.target[0].value
-    const end_time = e.target[1].value
-    const keyword = e.target[2].value.toLowerCase()
-    setKeyword(e.target[2].value)
+
+    setRelatedKeywords([])
+    setAnalytics([])
+    setTweets([])
+
+    let date = e.target[0].value
+    const keyword_field = e.target[1].value.toLowerCase()
 
     const data = {
       "request": {
         "params": {
-          "start_time": start_time,
-          "end_time": end_time,
-          "keyword": keyword
+          "date": date,
+          "keyword": keyword_field
         }
       }
     }
@@ -37,63 +38,102 @@ export default function TwitterAnalyzer() {
     }).then(async res => {
       const data = await res.json()
       setRelatedKeywords(data.related_keywords)
-      setGraphData(data.graph_data)
       setAnalytics([data.volume_first_half + data.volume_second_half, 
-        (data.volume_first_half + data.volume_second_half) / data.number_of_tweets,
+        ((data.volume_first_half + data.volume_second_half) / 7).toFixed(2),
       (((data.volume_second_half - data.volume_first_half) / data.volume_first_half) * 100).toFixed(2)
       ])
+    })
+
+    const endpoint2 = '/api/tweets';
+    await fetch(endpoint2, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSONdata
+    }).then(async res => {
+      const data = await res.json()
+      setTweets(data.data)
     })
   }
   
   return (
-    <div className={styles.margins}>
-      <h1>Twitter Analyzer</h1>
-      <p>Enter a start time, end time, and keyword to analyze Twitter data.</p>
-      <p>A single keyword request to Twitter has a max of 7 days i.e. the range from 12/1/2022-12/10/2022 is 10 days, so 2 requests.</p>
-      <p>There is a limit of 500 requests every 15 minutes.</p>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <label className={styles.input}>
-          Start Time (INclusive):
-          <input type="date" name="start_time" required/>
-        </label>
-        <label className={styles.input}>
-          End Time (EXclusive):
-          <input type="date" name="end_time" required/>
-        </label>
-        <label className={styles.input}>
-          Keyword:
-          <input type="text" name="keywords" required/>
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      {Object.keys(graphData).length !== 0 &&
-      <div className={styles.graph}>
-      <h2>Volume for <em>{keyword}</em> by day</h2>
-      <ResponsiveContainer width="100%" height="100%">
-      <LineChart width={1000} height={500} data={graphData}
-        margin={{ top: 30, bottom: 30 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" angle="-20" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="volume" />
-      </LineChart></ResponsiveContainer></div>}
-      {analytics.length !== 0 && <div>
-        <h2>Analytics</h2>
-        <p><b>Total Volume:</b> {analytics[0]}</p>
-        <p><b>Average Volume Per Day:</b> {analytics[1]}</p>
-        <p><b>Growth Trend:</b> {analytics[2]}%</p>
-      </div>}
-      <p>(Growth trend is the percent change from the first half of the period vs the second half)</p>
-      {relatedKeywords.length !== 0 && <div>
-        <h2>Related Keywords</h2>
-        <ul>
-          {relatedKeywords.map((keyword, index) => {
-            return <li key={index}>{keyword}</li>
-          })}
-        </ul>
-      </div>}
+    <div className={styles.content}>
+      <img src="/logo.png" alt="logo" className={styles.logo} />
+      <div className={styles.analyzer}>
+        <div className={styles.header}>
+          <h1>Twitter Analyzer</h1>
+          <button onClick={() => signOut()}>Sign out</button>
+        </div>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <label className={styles.input}>
+            <div className={styles.leftInput}>
+              <img src="/date.png" alt="" className={styles.image}/>
+              <h3>Select Date</h3>
+            </div>
+            <input type="date" name="date" max={new Date().toISOString().split("T")[0]} required/>
+          </label>
+          <label className={styles.input}>
+            <div className={styles.leftInput}>
+              <img src="/keyword.png" alt="" className={styles.image}/>
+              <h3>Keyword</h3>
+            </div>
+            <input type="text" name="keywords" required/>
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+        {analytics.length !== 0 && <div>
+          <h2>Analytics: Previous 7 Days</h2>
+          <table className={styles.analytics}>
+            <tr>
+              <td className={styles.first}>Total Volume</td>
+              <td className={styles.second}>{analytics[0]}</td>
+            </tr>
+            <tr>
+              <td className={styles.first}>Avg. Volume Per Day</td>
+              <td className={styles.second}>{analytics[1]}</td>
+            </tr>
+            <tr>
+              <td className={styles.first}>Trend</td>
+              <td className={styles.second}>{analytics[2]}%</td>
+            </tr>
+          </table>
+        </div>}
+        {relatedKeywords.length !== 0 && <div>
+          <h2>Related Keywords</h2>
+          <div className={styles.keywords}>
+            {relatedKeywords.map((keyword, index) => {
+              return <p key={index} className={styles.keyword}>{keyword}</p>
+            })}
+          </div>
+        </div>}
+        {tweets.length !== 0 && <div>
+          <h2>Top Tweets</h2>
+          <div className={styles.tweets}>
+            {tweets.map((tweet, index) => {
+              return <div className={styles.tweet}>
+                <a href={`https://twitter.com/_/status/${tweet.id}`} target="_blank" rel="noreferrer">{`https://twitter.com/_/status/${tweet.id}`}</a>
+                <p>{tweet.text}</p>
+              </div>
+            })}
+          </div>
+        </div>}
+      </div>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+  if (!session) {
+      return {
+          redirect: {
+              destination: '/',
+              permanent: false,
+          },
+      };
+  }
+  return {
+      props: { session },
+  };
 }

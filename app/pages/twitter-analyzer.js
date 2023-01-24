@@ -15,7 +15,7 @@ export default function TwitterAnalyzer() {
     setTweets([])
 
     let date = e.target[0].value
-    const keyword_field = e.target[1].value.toLowerCase()
+    const keyword_field = e.target[1].value.toLowerCase().replace('#', '').replace('@', '')
 
     const data = {
       "request": {

@@ -111,7 +111,7 @@ export default function TwitterAnalyzer() {
           <h2>Top Tweets</h2>
           <div className={styles.tweets}>
             {tweets.map((tweet, index) => {
-              return <div className={styles.tweet}>
+              return <div className={styles.tweet} key={index}>
                 <a href={`https://twitter.com/_/status/${tweet.id}`} target="_blank" rel="noreferrer">{`https://twitter.com/_/status/${tweet.id}`}</a>
                 <p>{tweet.text}</p>
               </div>

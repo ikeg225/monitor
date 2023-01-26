@@ -6,6 +6,7 @@ export default function TwitterAnalyzer() {
   const [relatedKeywords, setRelatedKeywords] = useState([])
   const [analytics, setAnalytics] = useState([])
   const [tweets, setTweets] = useState([])
+  const [keyword, setKeyowrd] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -13,14 +14,14 @@ export default function TwitterAnalyzer() {
     setRelatedKeywords([])
     setAnalytics([])
     setTweets([])
+    setKeyowrd('')
 
-    let date = e.target[0].value
-    const keyword_field = e.target[1].value.toLowerCase().replace('#', '').replace('@', '')
+    const keyword_field = e.target[0].value.toLowerCase().trim().replace('#', '').replace('@', '')
+    setKeyowrd(keyword_field)
 
     const data = {
       "request": {
         "params": {
-          "date": date,
           "keyword": keyword_field
         }
       }
@@ -56,7 +57,6 @@ export default function TwitterAnalyzer() {
       setTweets(data.data)
     })
   }
-  
   return (
     <div className={styles.content}>
       <img src="/logo.png" alt="logo" className={styles.logo} />
@@ -65,14 +65,8 @@ export default function TwitterAnalyzer() {
           <h1>Twitter Analyzer</h1>
           <button onClick={() => signOut()}>Sign out</button>
         </div>
+        <p>Use broad search or "" for phrase match.</p>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label className={styles.input}>
-            <div className={styles.leftInput}>
-              <img src="/date.png" alt="" className={styles.image}/>
-              <h3>Select Date</h3>
-            </div>
-            <input type="date" name="date" max={new Date().toISOString().split("T")[0]} required/>
-          </label>
           <label className={styles.input}>
             <div className={styles.leftInput}>
               <img src="/keyword.png" alt="" className={styles.image}/>
@@ -111,10 +105,24 @@ export default function TwitterAnalyzer() {
           <h2>Top Tweets</h2>
           <div className={styles.tweets}>
             {tweets.map((tweet, index) => {
-              return <div className={styles.tweet} key={index}>
+              let cleaned_keyword = [keyword]
+              if (cleaned_keyword[0].includes('"')) {
+                cleaned_keyword[0] = keyword.replaceAll('"', '')
+              } else {
+                cleaned_keyword = cleaned_keyword[0].split(" ")
+              }
+
+              let contains = false
+              cleaned_keyword.forEach(keyword => {
+                if (tweet.text.includes(keyword)) {
+                  contains = true
+                }
+              })
+
+              return contains ? <div className={styles.tweet} key={index}>
                 <a href={`https://twitter.com/_/status/${tweet.id}`} target="_blank" rel="noreferrer">{`https://twitter.com/_/status/${tweet.id}`}</a>
                 <p>{tweet.text}</p>
-              </div>
+              </div> : null
             })}
           </div>
         </div>}

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         api_version: '12'
     });
       
-    let date = new Date(req.body.request.params.date)
+    let date = new Date()
     let end = new Date(date)
     end.setDate(end.getDate() - 7)
     const returnData = []

@@ -65,7 +65,7 @@ export default function TwitterAnalyzer() {
           <h1>Twitter Analyzer</h1>
           <button onClick={() => signOut()}>Sign out</button>
         </div>
-        <p>Use broad search or "" for phrase match.</p>
+        <p>Use broad search or &quot;&quot; for phrase match.</p>
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.input}>
             <div className={styles.leftInput}>

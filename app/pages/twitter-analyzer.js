@@ -16,7 +16,7 @@ export default function TwitterAnalyzer() {
     setTweets([])
     setKeyowrd('')
 
-    const keyword_field = e.target[0].value.toLowerCase().trim().replace('#', '').replace('@', '')
+    const keyword_field = e.target[0].value.toLowerCase().trim().replace('“', '"').replace('”', '"')
     setKeyowrd(keyword_field)
 
     const data = {
@@ -59,20 +59,16 @@ export default function TwitterAnalyzer() {
   }
   return (
     <div className={styles.content}>
-      <img src="/logo.png" alt="logo" className={styles.logo} />
       <div className={styles.analyzer}>
+        <img src="/logo.png" alt="logo" className={styles.logo} />
         <div className={styles.header}>
           <h1>Twitter Analyzer</h1>
-          <button onClick={() => signOut()}>Sign out</button>
+          <button onClick={() => signOut()}>Sign Out</button>
         </div>
-        <p>Use broad search or &quot;&quot; for phrase match.</p>
+        <p className={styles.instruction}>Use broad search or &quot;&quot; for phrase match.</p>
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.input}>
-            <div className={styles.leftInput}>
-              <img src="/keyword.png" alt="" className={styles.image}/>
-              <h3>Keyword</h3>
-            </div>
-            <input type="text" name="keywords" required/>
+            <input type="text" name="keywords" required placeholder="Enter Keyword" />
           </label>
           <input type="submit" value="Submit" />
         </form>
@@ -101,7 +97,7 @@ export default function TwitterAnalyzer() {
             })}
           </div>
         </div>}
-        {tweets.length !== 0 && <div>
+        {tweets && tweets.length !== 0 && <div>
           <h2>Top Tweets</h2>
           <div className={styles.tweets}>
             {tweets.map((tweet, index) => {
@@ -127,6 +123,7 @@ export default function TwitterAnalyzer() {
           </div>
         </div>}
       </div>
+      <p className={styles.copyright}>&copy; 2023 ScreamOutSocial.com. All rights reserved.</p>
     </div>
   )
 }

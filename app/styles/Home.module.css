@@ -1,63 +1,134 @@
 .container {
+    min-height: 100%;
+    width: 100%;
+    background-image: url("../public/background.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
+    align-items: center;
 }
 
 .login {
     display: flex;
-    flex-direction: column;
-    background-color: #E26F2C;
-    padding: 40px 100px;
-    margin: 10px;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    color: white;
-    font-family: 'Source Sans 3 Bold';
+    flex-direction: row;
 }
 
-.login h1 {
-    margin: 0 0 15px 0;
+.loginLeft {
+    background-color: white;
+    padding: 50px 70px;
 }
 
 .fields {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 10px;
-}
-
-.control {
     display: flex;
     flex-direction: row;
     gap: 10px;
 }
 
+.login img {
+    height: 400px;
+    width: 400px;
+    object-fit: cover;
+}
+
 .control input {
     border: none;
-    border-radius: 10px;
-    font-family: 'Source Sans 3';
-    padding: 0 10px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
+    font-size: 18px;
+}
+
+.control input::placeholder {
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
+    font-size: 18px;
+}
+
+.loginLeft > p, .loginLeft h1 {
+    margin: 0 0 0 0;
+}
+
+.loginLeft > p {
+    color: #aaa;
+    font-size: 22px;
+    font-family: 'Source Sans 3 Light';
 }
 
 .actions button {
     border: none;
-    border-radius: 10px;
-    font-family: 'Source Sans 3 Bold';
-    padding: 10px 20px;
-    background-color: black;
+    background-color: #222222;
     color: white;
+    font-family: 'Source Sans 3 Light';
+    padding: 15px 30px;
+    margin-top: 20px;
     cursor: pointer;
-    width: 100%
+    font-size: 18px;
+}
+
+.copyright {
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
 }
 
 .error {
-    margin: 0;
-    text-align: center;
+    color: red;
+    font-family: 'Source Sans 3 Light';
+    font-size: 18px;
+    margin: 10px 0 0 0;
 }
 
-.logo {
-    max-width: 250px;
+@media screen and (max-width: 1000px) {
+    .container {
+        justify-content: start;
+    }
+
+    .login {
+        flex-direction: column;
+        margin: 30px 30px;
+    }
+
+    .login img {
+        width: 100%;
+    }
+
+    .fields {
+        flex-direction: column;
+    }
+
+    .fields input {
+        width: fit-content;
+    }
+
+    .loginLeft {
+        padding: 30px 40px;
+    }
+
+    .loginLeft {
+        text-align: center;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+
+    .control input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .loginLeft > p {
+        margin-top: 20px;
+    }
+
+    .actions {
+        margin: 20px 0;
+    }
+
+    .loginLeft h1 {
+        font-size: 30px;
+    }
 }

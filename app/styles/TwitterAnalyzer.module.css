@@ -1,21 +1,25 @@
 .content {
+    min-height: 100%;
+    width: 100%;
+    background-image: url("../public/background.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
 }
 
 .analyzer {
     display: flex;
     flex-direction: column;
-    background-color: #E26F2C;
+    background-color: white;
     padding: 40px 75px;
     margin: 10px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    color: white;
-    font-family: 'Source Sans 3 Bold';
-    width: fit-content;
+    color: black;
+    min-width: 600px;
 }
 
 .header {
@@ -24,7 +28,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .header h1 {
@@ -33,12 +37,12 @@
 
 .header button, .form > input {
     border: none;
-    border-radius: 10px;
-    font-family: 'Source Sans 3 Bold';
     padding: 10px 20px;
     background-color: black;
     color: white;
     cursor: pointer;
+    font-family: 'Source Sans 3 Light';
+    font-size: 16px;
 }
 
 .form {
@@ -57,9 +61,12 @@
 
 .input input {
     border: none;
-    border-radius: 10px;
-    font-family: 'Source Sans 3';
-    padding: 0 10px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
+    font-size: 18px;
+    width: 100%;
 }
 
 .leftInput {
@@ -122,7 +129,7 @@
 }
 
 .logo {
-    max-width: 250px;
+    max-width: 150px;
     margin-top: 30px;
 }
 
@@ -134,10 +141,10 @@
 
 .tweet {
     max-width: 500px;
-    background-color: white;
     color: black;
     padding: 20px;
     border-radius: 20px;
+    border: 2px solid black;
 }
 
 .tweet a {
@@ -147,4 +154,33 @@
 
 .tweet p {
     margin: 10px 0 0 0;
+}
+
+.instruction {
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
+    font-size: 18px;
+}
+
+.copyright {
+    color: #aaa;
+    font-family: 'Source Sans 3 Light';
+}
+
+@media screen and (max-width: 775px) {
+    .analyzer {
+        min-width: 0;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .analyzer {
+        padding: 30px 40px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }

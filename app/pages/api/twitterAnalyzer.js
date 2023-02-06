@@ -20,22 +20,32 @@ export default async function handler(req, res) {
         })
     })
 
-    let volume_first_half = 0
-    let volume_second_half = 0
+    try {
+        let volume_first_half = 0
+        let volume_second_half = 0
 
-    for (let i = 0; i < returnData[0].data.tweet_volume.length; i++) {
-        if (i < 7 / 2) {
-            volume_first_half += returnData[0].data.tweet_volume[i]
-        } else {
-            volume_second_half += returnData[0].data.tweet_volume[i]
+        for (let i = 0; i < returnData[0].data.tweet_volume.length; i++) {
+            if (i < 7 / 2) {
+                volume_first_half += returnData[0].data.tweet_volume[i]
+            } else {
+                volume_second_half += returnData[0].data.tweet_volume[i]
+            }
         }
-    }
 
-    const data = {
-        "related_keywords": returnData[0].data.related_keywords,
-        "volume_first_half": volume_first_half,
-        "volume_second_half": volume_second_half
-    }
+        const data = {
+            "related_keywords": returnData[0].data.related_keywords,
+            "volume_first_half": volume_first_half,
+            "volume_second_half": volume_second_half
+        }
 
-    res.status(200).json(data)
+        res.status(200).json(data)
+    } catch (error) {
+        const data = {
+            "related_keywords": [],
+            "volume_first_half": 0,
+            "volume_second_half": 0
+        }
+
+        res.status(200).json(data)
+    }
 }

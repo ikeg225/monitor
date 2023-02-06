@@ -1,8 +1,10 @@
 html,
-body {
+body, #__next {
   padding: 0;
   margin: 0;
   font-family: 'Source Sans 3';
+  height: 100%;
+  width: 100%;
 }
 
 @font-face {
@@ -18,4 +20,9 @@ body {
 @font-face {
   font-family: 'Source Sans 3 Semi Bold';
   src: url('../fonts/SourceSans3-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Source Sans 3 Light';
+  src: url('../fonts/SourceSans3-Light.ttf');
 }

@@ -39,29 +39,34 @@ export default function Home() {
       <Head>
         <title>Login</title>
       </Head>
-      <img src="/logo.png" alt="logo" className={styles.logo} />
       <div className={styles.login}>
-        <h1>Login</h1>
-        <form onSubmit={submitHandler} className={styles.fields}>
-          <div className={styles.control}>
-            <label htmlFor='email'>Your Email</label>
-            <input type='email' id='email' required ref={emailInputRef}/>
-          </div>
-          <div className={styles.control}>
-            <label htmlFor='password'>Your Password</label>
-            <input
-              type='password'
-              id='password'
-              required
-              ref={passwordInputRef}
-            />
-          </div>
-          {signinError && <p className={styles.error}>{signinError}</p>}
-          <div className={styles.actions}>
-            <button type="submit">Continue</button>
-          </div>
-        </form>
+        <div className={styles.loginLeft}>
+          <h1>Twitter Analysis Login</h1>
+          <p>Please Login below...</p>
+          <form onSubmit={submitHandler}>
+            <div className={styles.fields}>
+              <div className={styles.control}>
+                <input type='email' id='email' required ref={emailInputRef} placeholder='Your Email'/>
+              </div>
+              <div className={styles.control}>
+                <input
+                  type='password'
+                  id='password'
+                  required
+                  ref={passwordInputRef}
+                  placeholder='Your Password'
+                />
+              </div>
+            </div>
+            {signinError && <p className={styles.error}>{signinError}</p>}
+            <div className={styles.actions}>
+              <button type="submit">Login</button>
+            </div>
+          </form>
+        </div>
+        <img src="/login.jpg" alt="" />
       </div>
+      <p className={styles.copyright}>&copy; 2023 ScreamOutSocial.com. All rights reserved.</p>
     </div>
   )
 }

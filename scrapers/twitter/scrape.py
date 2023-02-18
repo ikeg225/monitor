@@ -62,11 +62,11 @@ class Scrape:
         for keyword in keywords:
             if ' ' in keyword:
                 keyword = f'"{keyword}"'
-            if len(rule['value']) + len('%20OR%20') + len(keyword) <= 512:
+            if len(rule['value']) + len(' OR ') + len(keyword) <= 512:
                 if rule['value'] == '':
                     rule['value'] = keyword
                 else:
-                    rule['value'] += f'%20OR%20{keyword}'
+                    rule['value'] += f' OR {keyword}'
             else:
                 if rule['value'] != '':
                     rules.append(rule)

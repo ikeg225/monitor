@@ -153,19 +153,19 @@ export default function Keyword() {
                 </div>
                 <div>
                     <h3>Enter rule here. Needs to be less than or equal to 502 characters. Max of 5 rules per account.</h3>
-                    <h3>Here's an example for finding web dev freelance work from verified twitter accounts: web (development OR developer) (freelance OR temp) -job place:"san francisco" is:verified</h3>
+                    <h3>Here is an example for finding web dev freelance work from verified twitter accounts: web (development OR developer) (freelance OR temp) -job place:&quot;san francisco&quot; is:verified</h3>
                     <h3>Learn more about rules <a href="https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule" target="_blank" rel="noopener noreferrer">here</a></h3>
-                    <h3>Note: Capitlization matters! "OR" is different than "or".</h3>
+                    <h3>Note: Capitlization matters! &quot;OR&quot; is different than &quot;or&quot;.</h3>
                     <input type="text" placeholder="your rule..." required onChange={rulelength}/>
                     <h3>Rule length: {ruleLength}</h3>
                 </div>
                 <div>
                     <h3>Enter your response to tweets that match.</h3>
-                    <h3>Here's an example: &#123;Hey|Howdy|Hello,&#125; &#123;I'm|my name's&#125; Ethan and I am a &#123;professional|talented&#125; web developer with &#123;10|over 10|10+&#125; years of experience. &#123;Hit me up!|Reach me via email at __&#125;</h3>
+                    <h3>Here is an example: &#123;Hey|Howdy|Hello,&#125; &#123;I&apos;m|my name&apos;s&#125; Ethan and I am a &#123;professional|talented&#125; web developer with &#123;10|over 10|10+&#125; years of experience. &#123;Hit me up!|Reach me via email at __&#125;</h3>
                     <input type="text" placeholder="your spintax..." required onChange={spintaxlength}/>
                     <h3>Longest spintax length: {spinlength.length}</h3>
                     <h3>Example reponse: {spinlength}</h3>
-                    <h3>Has to be less than 280 characters, it's the tweet limit.</h3>
+                    <h3>Has to be less than 280 characters, it&apos;s the tweet limit.</h3>
                 </div>
                 <button type="submit">Add Rule and Response</button>
                 {apiError && <p className={styles.ErrorMessage}>There was an error: {apiErrorMessage}</p>}

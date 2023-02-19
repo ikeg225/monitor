@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const autoPost = await db.collection('autoPost');
 
     const found = await autoPost.findOne({ email: email });
-    if (found && found["rules"].length >= 5) {
+    if (found && found["rules"].length >= 25) {
         res.status(400).json({ error: "You have reached the maximum number of rules" })
         return
     }

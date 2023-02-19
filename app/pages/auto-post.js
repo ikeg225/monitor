@@ -152,7 +152,7 @@ export default function Keyword() {
                     <input type="text" placeholder="email of account..." required/>
                 </div>
                 <div>
-                    <h3>Enter rule here. Needs to be less than or equal to 502 characters. Max of 5 rules per account.</h3>
+                    <h3>Enter rule here. Needs to be less than or equal to 502 characters. Max of 25 rules per account.</h3>
                     <h3>Here is an example for finding web dev freelance work from verified twitter accounts: web (development OR developer) (freelance OR temp) -job place:&quot;san francisco&quot; is:verified</h3>
                     <h3>Learn more about rules <a href="https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule" target="_blank" rel="noopener noreferrer">here</a></h3>
                     <h3>Note: Capitlization matters! &quot;OR&quot; is different than &quot;or&quot;.</h3>

@@ -19,15 +19,15 @@ export default function Keyword() {
         setApiErrorMessage('')
         setSuccessAdd(false)
 
-        if (spinlength.length > 280 || ruleLength > 512) {
+        if (spinlength.length > 280 || ruleLength > 502) {
             setApiErrorMessage("Spin or Rule length too long")
             setApiError(true)
             return
         }
 
         const email = e.target[0].value.toLowerCase().trim()
-        const rule = e.target[1].value.toLowerCase().trim()
-        const responseSpintax = e.target[2].value.toLowerCase().trim()
+        const rule = e.target[1].value.trim()
+        const responseSpintax = e.target[2].value.trim()
 
         const data = {
             email: email,
@@ -69,7 +69,7 @@ export default function Keyword() {
         setSuccessDelete(false)
 
         const email = e.target[0].value.toLowerCase().trim()
-        const rule = e.target[1].value.toLowerCase().trim()
+        const rule = e.target[1].value.trim()
 
         const data = {
             email: email,
@@ -148,19 +148,20 @@ export default function Keyword() {
             {!toggle && <form onSubmit={handleAdd} className={styles.addForm}>
                 <h3>Add a new Rule/Response for auto reply twitter bot.</h3>
                 <div>
-                    <h3>Matched and tweets replied to will be sent to this email.</h3>
+                    <h3>Matched and tweets replied to will be sent to this email (unless otherwise specified).</h3>
                     <input type="text" placeholder="email of account..." required/>
                 </div>
                 <div>
-                    <h3>Enter rule here. Needs to be less than or equal to 512 characters. Max of 5 rules per account.</h3>
+                    <h3>Enter rule here. Needs to be less than or equal to 502 characters. Max of 5 rules per account.</h3>
                     <h3>Here's an example for finding web dev freelance work from verified twitter accounts: web (development OR developer) (freelance OR temp) -job place:"san francisco" is:verified</h3>
                     <h3>Learn more about rules <a href="https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule" target="_blank" rel="noopener noreferrer">here</a></h3>
+                    <h3>Note: Capitlization matters! "OR" is different than "or".</h3>
                     <input type="text" placeholder="your rule..." required onChange={rulelength}/>
                     <h3>Rule length: {ruleLength}</h3>
                 </div>
                 <div>
                     <h3>Enter your response to tweets that match.</h3>
-                    <h3>Here's an example: &#123;Hey | Howdy | Hello,&#125; &#123;I'm | my name's&#125; Ethan and I am a &#123;professional|talented&#125; web developer with &#123;10|over 10|10+&#125; years of experience. &#123;Hit me up!|Reach me via email at __&#125;</h3>
+                    <h3>Here's an example: &#123;Hey|Howdy|Hello,&#125; &#123;I'm|my name's&#125; Ethan and I am a &#123;professional|talented&#125; web developer with &#123;10|over 10|10+&#125; years of experience. &#123;Hit me up!|Reach me via email at __&#125;</h3>
                     <input type="text" placeholder="your spintax..." required onChange={spintaxlength}/>
                     <h3>Longest spintax length: {spinlength.length}</h3>
                     <h3>Example reponse: {spinlength}</h3>

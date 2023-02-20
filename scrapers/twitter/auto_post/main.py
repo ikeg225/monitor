@@ -1,12 +1,14 @@
 import os
 import json
 import time
+import boto3
 import spintax
 import requests
 import datetime
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from requests_oauthlib import OAuth1Session
+from botocore.exceptions import ClientError
 
 load_dotenv()
 
@@ -105,27 +107,86 @@ class AutoPost:
     def reply_to_tweet(self, json_response):
         tweet_id = json_response['data']['id']
         reply = spintax.spin(self.rule_and_response[json_response['matching_rules'][0]['tag']])
-        oauth = OAuth1Session(
-            self.api_key,
-            client_secret=self.api_secret,
-            resource_owner_key=self.access_token,
-            resource_owner_secret=self.access_token_secret,
+        body_text = (
+            f"Original Post: {json_response['data']['text']}\n"
+            f"Link: https://twitter.com/_/status/{tweet_id}\n"
+            f"Replied Post: {reply}\n"
+            f"Link: link to replied post would be here\n"
+            ""
+            "______________________\n"
+            "PLEASE DO NOT REPLY TO THIS EMAIL\n"
+            "Twitter Monitoring by ScreamOutSocial.com"
         )
-        response = oauth.post(
-            "https://api.twitter.com/2/tweets",
-            json={"text": reply, "reply": {"in_reply_to_tweet_id": tweet_id}},
-        )
-        if response.status_code != 201:
-            print(
-                "Cannot reply to tweet (HTTP {}): {} {}".format(
-                    response.status_code, response.text, response.headers
-                )
-            )
-            if 'rate limit exceeded' in response.text.lower() or 'rate limit exceeded' in response.headers.lower():                
-                time.sleep(3600)
-                self.reply_to_tweet(json_response)
 
-        
+        body_html = f"""
+        <html>
+        <head></head>
+        <body>
+        <p><b>Original Post:</b> {json_response['data']['text']}</p>
+        <p><b>Link: </b><a href='https://twitter.com/_/status/{tweet_id}'>https://twitter.com/_/status/{tweet_id}</a></p>
+        <p><b>Replied Post:</b> {reply}</p>
+        <p><b>Link: </b>link to replied post would be here</p>
+        <br>
+        <p>______________________</p>
+        <p>PLEASE DO NOT REPLY TO THIS EMAIL</p>
+        <p>Twitter Monitoring by ScreamOutSocial.com</p>
+        </body>
+        </html>
+        """
+
+        self.send_email(self.email, f"Twitter Bot Replied to a Tweet!", body_text, body_html)
+
+        # oauth = OAuth1Session(
+        #     self.api_key,
+        #     client_secret=self.api_secret,
+        #     resource_owner_key=self.access_token,
+        #     resource_owner_secret=self.access_token_secret,
+        # )
+        # NEED TO ADD PROXIES
+        # response = oauth.post(
+        #     "https://api.twitter.com/2/tweets",
+        #     json={"text": reply, "reply": {"in_reply_to_tweet_id": tweet_id}},
+        # )
+        # if response.status_code != 201:
+        #     print(
+        #         "Cannot reply to tweet (HTTP {}): {} {}".format(
+        #             response.status_code, response.text, response.headers
+        #         )
+        #     )
+        #     if 'rate limit exceeded' in response.text.lower() or 'rate limit exceeded' in response.headers.lower():                
+        #         time.sleep(3600)
+        #         self.reply_to_tweet(json_response)
+    
+    def send_email(self, recipient, subject, body_text, body_html):
+        charset = "UTF-8"
+        client = boto3.client('ses',region_name=os.getenv('AWS_REGION'))
+        try:
+            client.send_email(
+                Destination={
+                    'ToAddresses': [
+                        recipient,
+                    ],
+                },
+                Message={
+                    'Body': {
+                        'Html': {
+                            'Charset': charset,
+                            'Data': body_html,
+                        },
+                        'Text': {
+                            'Charset': charset,
+                            'Data': body_text,
+                        },
+                    },
+                    'Subject': {
+                        'Charset': charset,
+                        'Data': subject,
+                    },
+                },
+                Source=os.getenv('SENDER'),
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
 
     def reset_and_run(self):
         self.reset_rules()
